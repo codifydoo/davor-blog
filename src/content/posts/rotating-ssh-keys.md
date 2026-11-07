@@ -4,7 +4,6 @@ date: 2026-11-03T09:18:00+01:00
 number: 42
 tags: [security, ssh]
 lang: en
-minutes: 7
 ---
 
 My main key was generated in 2021 on a laptop I no longer own. It still opened the NAS, the router and the Raspberry Pi that runs DNS. That is three machines trusting a file I can't fully account for.
