@@ -13,7 +13,7 @@ export const SITE = {
   /** Profile links on the Mail page and as rel="me" in every page's head; leave one empty to hide it. */
   linkedin: 'https://www.linkedin.com/in/davor-s-453aaa1b2/',
   /** X handle without the @. */
-  x: '',
+  x: '6174_____',
   accent: '#b3261e',
   /** All printed dates use this zone, whatever machine runs the build. */
   timeZone: 'Europe/Zagreb',
