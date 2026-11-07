@@ -45,7 +45,7 @@ const projects = SITE.projects.reduce((s, d) => s + d.qty, 0);
       <div class="totals">
         <div class="line"><span>POSTS</span><span>{posts.length}</span></div>
         <div class="line total"><span>PROJECTS</span><span>{projects}</span></div>
-        <div class="dim">OPINIONS: NON-REFUNDABLE</div>
+        <div class="dim" style="padding-right:108px">OPINIONS: <span style="white-space:nowrap">NON-REFUNDABLE</span></div>
         <Stamp lines={['MADE', 'IN', 'ZAGREB']} size={84} fontSize={12} rotate={-10} right={10} bottom={-4} />
       </div>
       <div class="rule" style="margin-top:8px"></div>
