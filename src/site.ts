@@ -7,8 +7,7 @@ export const SITE = {
   terminal: 'TERMINAL 01 · ZAGREB, HR',
   cashier: 'davor',
   langs: 'EN/HR',
-  /** Placeholder from the design: replace with the real address before going public. */
-  email: 'mail@davor.example',
+  email: 'dsantic@codify.hr',
   /** PGP fingerprint as printed lines; leave empty to hide the row. */
   pgp: [] as string[],
   accent: '#b3261e',
