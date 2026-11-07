@@ -10,6 +10,7 @@ import { SITE } from '../site';
 import { fmtDate, fmtTime } from '../lib/posts';
 
 const printed = new Date();
+const linkedinName = SITE.linkedin.replace(/\/+$/, '').split('/').pop();
 ---
 <Base title="Mail" description="How to reach me. Plain text is fine, encrypted is better.">
   <main class="screen">
@@ -28,6 +29,12 @@ const printed = new Date();
       <div class="rule" style="margin-top:20px"></div>
       <div class="kv">
         <div><span class="k">TO</span><span class="plain">{SITE.email.endsWith('.example') ? 'TBA' : SITE.email}</span></div>
+        {SITE.linkedin && (
+          <div><span class="k">IN</span><a class="plain" href={SITE.linkedin} rel="me">{linkedinName}</a></div>
+        )}
+        {SITE.x && (
+          <div><span class="k">X</span><a class="plain" href={`https://x.com/${SITE.x}`} rel="me">@{SITE.x}</a></div>
+        )}
         <div><span class="k">LANG</span><span>EN / HR</span></div>
         {SITE.pgp.length > 0 && (
           <div><span class="k">PGP</span><span class="wrap">{SITE.pgp.map((l, i) => <Fragment>{i > 0 && <br />}{l}</Fragment>)}</span></div>

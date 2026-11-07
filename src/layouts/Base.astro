@@ -25,6 +25,8 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="alternate" type="application/rss+xml" title={SITE.title} href="/feed.xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
+    {SITE.linkedin && <link rel="me" href={SITE.linkedin} />}
+    {SITE.x && <link rel="me" href={`https://x.com/${SITE.x}`} />}
     <meta name="theme-color" content="#1c1e24" />
     <meta property="og:type" content={type} />
     <meta property="og:title" content={fullTitle} />
