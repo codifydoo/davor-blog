@@ -1,0 +1,5 @@
+---
+interface Props { lines: string[] }
+const { lines } = Astro.props;
+---
+<div class="thanks">{lines.map((l) => <span>{l}</span>)}</div>

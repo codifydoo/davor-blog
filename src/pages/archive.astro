@@ -1,0 +1,47 @@
+---
+import Base from '../layouts/Base.astro';
+import Receipt from '../components/Receipt.astro';
+import PostItem from '../components/PostItem.astro';
+import { SITE } from '../site';
+import { getPosts, groupByMonth, pad } from '../lib/posts';
+
+const posts = await getPosts();
+const months = groupByMonth(posts);
+const years = [...new Set(months.map((m) => m.key.slice(0, 4)))];
+const yearLabel = years.length > 1 ? `${years[years.length - 1]}–${years[0]}` : years[0] ?? '';
+// Fanned-out tilt pattern, repeating across however many months there are.
+const tilt = [[-3, 6], [2.5, 22], [-2, 0], [4, 30]];
+---
+<Base title="Archive" description={`Every post on ${SITE.title}, one receipt per month.`}>
+  <main class="screen" style="padding-bottom:120px">
+    <div class="archive-head">
+      <h1 class="brand" style="font-size:26px;line-height:1.2"><a href="/" style="color:inherit;text-decoration:none">{SITE.name}</a></h1>
+      <div class="sub">Archive · {months.length} receipt{months.length === 1 ? '' : 's'} · {yearLabel}</div>
+    </div>
+
+    <div class="fan">
+      {months.map((m, i) => {
+        const [rot, dy] = tilt[i % tilt.length];
+        return (
+          <div class="card" style={`--rot:${rot}deg;--dy:${dy}px;--z:${months.length - i}`}>
+            <Receipt compact>
+              <div class="month">{m.label}</div>
+              <div class="month-sub">{m.monthName} · RECEIPT #{pad(m.receiptNo, 6)}</div>
+              <div class="rule" style="margin-top:10px"></div>
+              <div class="items">
+                {m.posts.map((p) => <PostItem post={p} showTags={false} />)}
+              </div>
+              <div class="rule"></div>
+              <div class="sum"><span>TOTAL · {m.posts.length}</span><span>{m.minutes} MIN</span></div>
+            </Receipt>
+          </div>
+        );
+      })}
+    </div>
+  </main>
+</Base>
+
+<style>
+  /* The fan cards carry their own shadow; drop the wrapper's. */
+  .card :global(.receipt-wrap) { filter: none; max-width: none; }
+</style>

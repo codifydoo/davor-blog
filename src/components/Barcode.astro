@@ -1,0 +1,13 @@
+---
+import { barcodePath } from '../lib/barcode';
+import { stampDigits } from '../lib/posts';
+interface Props { date: Date; serial: number; class?: string }
+const { date, serial, class: cls = '' } = Astro.props;
+const digits = stampDigits(date, serial);
+---
+<div class:list={['barcode', cls]}>
+  <svg width="240" height="48" viewBox="0 0 240 48" aria-hidden="true">
+    <path d={barcodePath(digits)} fill="#1a1a1a"></path>
+  </svg>
+  <div class="digits">{digits}</div>
+</div>

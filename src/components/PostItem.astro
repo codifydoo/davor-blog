@@ -1,0 +1,12 @@
+---
+import { fmtDate, readingMinutes, type Post } from '../lib/posts';
+import { pad } from '../lib/posts';
+interface Props { post: Post; showTags?: boolean }
+const { post, showTags = true } = Astro.props;
+const meta = [`#${pad(post.data.number, 4)}`, fmtDate(post.data.date)];
+if (showTags && post.data.tags.length) meta.push(post.data.tags.join(', '));
+---
+<a class="item" href={`/posts/${post.id}/`}>
+  <div class="row"><span class="name">{post.data.title}</span><span class="qty">{readingMinutes(post)} MIN</span></div>
+  <div class="sub">{meta.join(' · ')}</div>
+</a>

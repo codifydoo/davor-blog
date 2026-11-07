@@ -1,43 +1,44 @@
-# Astro Starter Kit: Minimal
+# davor-blog
 
-```sh
-pnpm create astro@latest -- --template minimal
+Personal blog styled as a till receipt. Astro 7 static build, zero client-side JavaScript, served by Caddy from a two-stage Docker image.
+
+## Develop
+
+```bash
+pnpm install
+pnpm dev        # http://localhost:4321, drafts visible
+pnpm build      # static output in dist/, drafts excluded
+pnpm preview
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Write a post
 
-## 🚀 Project Structure
+Add a markdown file under `src/content/posts/`:
 
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+```md
+---
+title: Moving DNS off the router
+date: 2026-10-27T10:00:00+01:00   # include the offset; dates print in Europe/Zagreb
+number: 41              # printed as #0041, keep it sequential
+tags: [networking, dns]
+lang: en                # or hr (feeds into /hr/feed.xml)
+minutes: 5              # optional; computed from word count when omitted
+draft: false            # true hides it from production builds
+---
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+Fenced code blocks become receipt "attachments". Give them a filename with `title`:
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+````md
+```bash title="rotate-keys.sh"
+set -euo pipefail
+```
+````
 
-Any static assets, like images, can be placed in the `public/` directory.
+## Site settings
 
-## 🧞 Commands
+Name, tagline, email, PGP fingerprint, accent colour and the devices on the About page live in `src/site.ts`. The public URL is `site` in `astro.config.mjs`.
 
-All commands are run from the root of the project, from a terminal:
+## Deploy
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `pnpm install`             | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Pushing to `main` builds the Dockerfile on Sproobo (app `davor-blog`, server `codify`) and serves it at https://davor.codify.hr. Caddy config is in `Caddyfile`.

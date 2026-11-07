@@ -1,0 +1,59 @@
+---
+import Base from '../layouts/Base.astro';
+import Receipt from '../components/Receipt.astro';
+import Masthead from '../components/Masthead.astro';
+import Stamp from '../components/Stamp.astro';
+import ReceiptNav from '../components/ReceiptNav.astro';
+import Barcode from '../components/Barcode.astro';
+import Thanks from '../components/Thanks.astro';
+import { getPosts, fmtDate, fmtTime, tagCounts } from '../lib/posts';
+
+const posts = await getPosts();
+const printed = new Date();
+const tags = [...tagCounts(posts)].slice(0, 3);
+const hr = posts.filter((p) => p.data.lang === 'hr').length;
+const feeds = [
+  { name: 'All posts', count: posts.length, href: '/feed.xml' },
+  ...tags.map(([t, n]) => ({ name: `#${t}`, count: n, href: `/tags/${t}/feed.xml` })),
+  ...(hr ? [{ name: 'Croatian only', count: hr, href: '/hr/feed.xml' }] : []),
+];
+---
+<Base title="RSS" description="Feeds for this blog: all posts, by tag, and Croatian only.">
+  <main class="screen">
+    <Receipt>
+      <Masthead />
+      <div class="meta">
+        <span>{fmtDate(printed)} {fmtTime(printed)}</span><span class="r">ITEM: FEEDS</span>
+      </div>
+      <div class="rule" style="margin-top:12px"></div>
+
+      <h1 class="page-title">Subscriptions</h1>
+      <div class="page-kicker">QTY {feeds.length} · FREE · NO TRACKING</div>
+      <div class="rule-dot" style="margin:16px 0 4px"></div>
+      <p class="prose" style="margin:0">Paste any of these into your feed reader. Full text in every entry, no tracking pixels.</p>
+
+      <div class="rule" style="margin-top:20px"></div>
+      <div class="cols"><span>FEED</span><span>ITEMS</span></div>
+      <div class="items">
+        {feeds.map((f) => (
+          <a class="item" href={f.href}>
+            <div class="row"><span class="name">{f.name}</span><span>{f.count}</span></div>
+            <div class="sub">{f.href}</div>
+          </a>
+        ))}
+      </div>
+      <div class="rule"></div>
+      <div class="totals">
+        <div class="line"><span>FORMAT</span><span>RSS 2.0</span></div>
+        <div class="line total"><span>TOTAL</span><span>0.00</span></div>
+        <div class="dim">PAID: NOTHING</div>
+        <Stamp lines={['NO', 'ADS']} size={80} fontSize={12} rotate={-12} right={10} bottom={-6} />
+      </div>
+      <div class="rule" style="margin-top:8px"></div>
+
+      <ReceiptNav current="rss" />
+      <Barcode date={printed} serial={3} />
+      <Thanks lines={['New items printed weekly-ish', 'Unsubscribe any time']} />
+    </Receipt>
+  </main>
+</Base>

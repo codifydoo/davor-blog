@@ -1,0 +1,74 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Receipt from '../../components/Receipt.astro';
+import Masthead from '../../components/Masthead.astro';
+import Stamp from '../../components/Stamp.astro';
+import Barcode from '../../components/Barcode.astro';
+import Thanks from '../../components/Thanks.astro';
+import { getPosts, fmtDate, fmtTime, readingMinutes, pad } from '../../lib/posts';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return posts.map((post, i) => ({
+    params: { id: post.id },
+    props: { post, newer: posts[i - 1] ?? null, older: posts[i + 1] ?? null },
+  }));
+}
+const { post, newer, older } = Astro.props;
+const { Content } = await render(post);
+const minutes = readingMinutes(post);
+const d = post.data.date;
+const kicker = ['QTY 1', `${minutes} MIN`, post.data.tags.join(', ')].filter(Boolean).join(' · ');
+const description =
+  post.data.description ??
+  (post.body ?? '')
+    .split(/\n\s*\n/)[0]
+    ?.replace(/!?\[([^\]]*)\]\([^)]*\)/g, '$1')
+    .replace(/[`*]/g, '')
+    .replace(/^[#>\s]+/, '')
+    .replace(/\s+/g, ' ')
+    .slice(0, 200);
+---
+<Base title={post.data.title} description={description} type="article">
+  <main class="screen">
+    <Receipt>
+      <Masthead />
+      <div class="meta">
+        <span>{fmtDate(d)} {fmtTime(d)}</span><span class="r">ITEM #{pad(post.data.number, 4)}</span>
+      </div>
+      <div class="rule" style="margin-top:12px"></div>
+
+      <article lang={post.data.lang}>
+        <h1 class="page-title">{post.data.title}</h1>
+        <div class="page-kicker">{kicker}</div>
+        <div class="rule-dot" style="margin:16px 0 4px"></div>
+        <div class="prose"><Content /></div>
+      </article>
+
+      <div class="rule" style="margin-top:24px"></div>
+      <div class="totals">
+        <div class="line"><span>SUBTOTAL</span><span>{minutes} MIN</span></div>
+        <div class="line"><span>DISCOUNT</span><span>-0 MIN</span></div>
+        <div class="line total"><span>TOTAL</span><span>{minutes} MIN</span></div>
+        <div class="dim">PAID: ATTENTION</div>
+        <div class="dim">CHANGE: 0.00</div>
+        <Stamp lines={['READ']} size={80} fontSize={16} rotate={-12} right={10} bottom={-6} />
+      </div>
+      <div class="rule" style="margin-top:8px"></div>
+
+      <nav class="postnav" aria-label="Posts">
+        {older ? <a href={`/posts/${older.id}/`} title={older.data.title}>← PREV TRANSACTION</a> : <span title="Oldest item">← PREV</span>}
+        {newer ? <a href={`/posts/${newer.id}/`} title={newer.data.title}>NEXT →</a> : <span title="Newest item">NEXT →</span>}
+      </nav>
+      <div class="rule-dot"></div>
+
+      <Barcode date={d} serial={post.data.number} class="pad" />
+      <Thanks lines={['Thank you for reading', 'Reply by mail · corrections welcome']} />
+    </Receipt>
+  </main>
+</Base>
+
+<style>
+  .barcode.pad { padding-top: 20px; }
+</style>

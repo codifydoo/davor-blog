@@ -1,0 +1,10 @@
+---
+/** A strip of receipt paper with torn top and bottom edges. */
+interface Props { compact?: boolean; class?: string }
+const { compact = false, class: cls = '' } = Astro.props;
+---
+<div class:list={['receipt-wrap', cls]}>
+  <div class="receipt-edge top"></div>
+  <div class:list={['receipt', { compact }]}><slot /></div>
+  <div class="receipt-edge bottom"></div>
+</div>

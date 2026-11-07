@@ -1,0 +1,20 @@
+---
+/** Footer navigation; the current page is left out, as on the design. */
+interface Props { current: 'home' | 'archive' | 'about' | 'rss' | 'mail' | 'none' }
+const { current } = Astro.props;
+const links = [
+  { key: 'home', href: '/', label: 'Home' },
+  { key: 'archive', href: '/archive/', label: 'Archive' },
+  { key: 'about', href: '/about/', label: 'About' },
+  { key: 'rss', href: '/rss/', label: 'RSS' },
+  { key: 'mail', href: '/mail/', label: 'Mail' },
+].filter((l) => l.key !== current);
+---
+<nav class="nav" aria-label="Site">
+  {links.map((l, i) => (
+    <Fragment>
+      {i > 0 && <span class="sep">·</span>}
+      <a href={l.href}>{l.label}</a>
+    </Fragment>
+  ))}
+</nav>

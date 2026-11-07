@@ -13,9 +13,12 @@
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",
+    "@fontsource/ibm-plex-mono": "^5.3.0",
     "astro": "^7.4.7"
   },
   "devDependencies": {
-    "@astrojs/rss": "^4.0.19"
+    "@astrojs/markdown-remark": "^7.3.6",
+    "@astrojs/rss": "^4.0.19",
+    "unist-util-visit": "^5.2.0"
   }
 }

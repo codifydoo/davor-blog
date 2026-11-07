@@ -1,0 +1,57 @@
+---
+import Base from '../layouts/Base.astro';
+import Receipt from '../components/Receipt.astro';
+import Masthead from '../components/Masthead.astro';
+import Stamp from '../components/Stamp.astro';
+import ReceiptNav from '../components/ReceiptNav.astro';
+import Barcode from '../components/Barcode.astro';
+import Thanks from '../components/Thanks.astro';
+import { SITE } from '../site';
+import { getPosts, fmtDate, fmtTime } from '../lib/posts';
+
+const posts = await getPosts();
+const printed = new Date();
+const devices = SITE.devices.reduce((s, d) => s + d.qty, 0);
+---
+<Base title="About" description="Who writes this blog and what runs in the rack.">
+  <main class="screen">
+    <Receipt>
+      <Masthead />
+      <div class="meta">
+        <span>{fmtDate(printed)} {fmtTime(printed)}</span><span class="r">ITEM: ABOUT</span>
+      </div>
+      <div class="rule" style="margin-top:12px"></div>
+
+      <h1 class="page-title">About</h1>
+      <div class="page-kicker">QTY 1 · CASHIER · ZAGREB</div>
+      <div class="rule-dot" style="margin:16px 0 4px"></div>
+      <div class="prose">
+        <p>I'm Davor. I work on infrastructure for a living and run a small network at home because I like knowing where every packet goes.</p>
+        <p>This blog is where I write down what I set up, what broke, and what I would do differently. Mostly in English, sometimes in Croatian.</p>
+      </div>
+
+      <div class="rule" style="margin-top:24px"></div>
+      <div class="cols"><span>IN SERVICE</span><span>QTY</span></div>
+      <div class="items">
+        {SITE.devices.map((d) => (
+          <div class="item" style="padding:8px 0;margin:0">
+            <div class="row"><span class="name">{d.name}</span><span>{d.qty}</span></div>
+            <div class="sub">{d.note}</div>
+          </div>
+        ))}
+      </div>
+      <div class="rule"></div>
+      <div class="totals">
+        <div class="line"><span>POSTS</span><span>{posts.length}</span></div>
+        <div class="line total"><span>DEVICES</span><span>{devices}</span></div>
+        <div class="dim">OPINIONS: NON-REFUNDABLE</div>
+        <Stamp lines={['MADE', 'IN', 'ZAGREB']} size={84} fontSize={12} rotate={-10} right={10} bottom={-4} />
+      </div>
+      <div class="rule" style="margin-top:8px"></div>
+
+      <ReceiptNav current="about" />
+      <Barcode date={printed} serial={1} />
+      <Thanks lines={['Thank you for stopping by', 'Keep this receipt for your records']} />
+    </Receipt>
+  </main>
+</Base>

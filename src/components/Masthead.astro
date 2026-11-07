@@ -1,0 +1,12 @@
+---
+import { SITE } from '../site';
+interface Props { big?: boolean }
+const { big = false } = Astro.props;
+---
+<div class="stars" aria-hidden="true">* * * * * * * * * * * * *</div>
+<div class:list={['masthead', { big }]}>
+  {big ? <h1 class="brand">{SITE.name}</h1> : <a class="brand" href="/">{SITE.name}</a>}
+  <div class="tagline">{SITE.tagline}</div>
+  <div class="terminal">{SITE.terminal}</div>
+</div>
+<div class="stars" aria-hidden="true">* * * * * * * * * * * * *</div>

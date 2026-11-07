@@ -1,0 +1,39 @@
+---
+import '../styles/global.css';
+import { SITE } from '../site';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** Set on post pages for article metadata. */
+  type?: 'website' | 'article';
+  /** Omit canonical/og:url (used by the 404 page). */
+  noindex?: boolean;
+}
+const { title, description = SITE.description, type = 'website', noindex = false } = Astro.props;
+const fullTitle = title ? `${title} · ${SITE.name}` : SITE.title;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="application/rss+xml" title={SITE.title} href="/feed.xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta name="theme-color" content="#1c1e24" />
+    <meta property="og:type" content={type} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    {!noindex && <meta property="og:url" content={canonical} />}
+    <meta property="og:site_name" content={SITE.title} />
+    <meta name="generator" content={Astro.generator} />
+  </head>
+  <body style={`--accent:${SITE.accent}`}>
+    <slot />
+  </body>
+</html>

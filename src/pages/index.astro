@@ -1,16 +1,53 @@
 ---
----
+import Base from '../layouts/Base.astro';
+import Receipt from '../components/Receipt.astro';
+import Masthead from '../components/Masthead.astro';
+import PostItem from '../components/PostItem.astro';
+import Stamp from '../components/Stamp.astro';
+import ReceiptNav from '../components/ReceiptNav.astro';
+import Barcode from '../components/Barcode.astro';
+import Thanks from '../components/Thanks.astro';
+import { SITE } from '../site';
+import { getPosts, groupByMonth, fmtDate, fmtTime, readingMinutes, pad, tagCounts } from '../lib/posts';
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+const posts = await getPosts();
+const latest = posts.slice(0, 6);
+const months = groupByMonth(posts);
+const receiptNo = months[0]?.receiptNo ?? SITE.receiptBase;
+const printed = new Date();
+const total = latest.reduce((s, p) => s + readingMinutes(p), 0);
+const topTag = tagCounts(latest).keys().next().value ?? 'reading';
+---
+<Base>
+  <main class="screen">
+    <Receipt>
+      <Masthead big />
+
+      <div class="meta">
+        <span>{fmtDate(printed)} {fmtTime(printed)}</span><span class="r">CASHIER: {SITE.cashier}</span>
+        <span>RECEIPT #{pad(receiptNo, 6)}</span><span class="r">LANG: {SITE.langs}</span>
+      </div>
+
+      <div class="rule" style="margin-top:16px"></div>
+      <div class="cols"><span>ITEM</span><span>READ</span></div>
+      <div class="items">
+        {latest.map((p) => <PostItem post={p} />)}
+      </div>
+
+      <div class="rule"></div>
+      <div class="totals">
+        <div class="line"><span>ITEMS</span><span>{latest.length}</span></div>
+        <div class="line"><span>DISCOUNT (#{topTag})</span><span>-0 MIN</span></div>
+        <div class="line total"><span>TOTAL</span><span>{total} MIN</span></div>
+        <div class="line dim"><span>PAID: ATTENTION</span><span></span></div>
+        <div class="line dim"><span>CHANGE: 0.00</span><span></span></div>
+        <Stamp lines={['FREE', 'TO', 'READ']} size={96} fontSize={13} rotate={-14} right={4} bottom={-14} />
+      </div>
+      <div class="rule" style="margin-top:8px"></div>
+
+      <ReceiptNav current="home" />
+      <Barcode date={printed} serial={receiptNo} />
+      <Thanks lines={['Thank you for reading', 'Keep this receipt for your records', 'No refunds on opinions']} />
+    </Receipt>
+  </main>
+</Base>

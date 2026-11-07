@@ -1,0 +1,30 @@
+---
+import Base from '../layouts/Base.astro';
+import Receipt from '../components/Receipt.astro';
+import Masthead from '../components/Masthead.astro';
+import Stamp from '../components/Stamp.astro';
+import ReceiptNav from '../components/ReceiptNav.astro';
+import Thanks from '../components/Thanks.astro';
+---
+<Base title="Not found" noindex>
+  <main class="screen">
+    <Receipt>
+      <Masthead />
+      <div class="meta"><span>ERROR 404</span><span class="r">ITEM: ?</span></div>
+      <div class="rule" style="margin-top:12px"></div>
+      <h1 class="page-title">Item not found</h1>
+      <div class="page-kicker">QTY 0 · NOT IN STOCK</div>
+      <div class="rule-dot" style="margin:16px 0 4px"></div>
+      <p style="margin:0">There is no receipt at this address. It may have been reprinted somewhere else, or never existed.</p>
+      <div class="rule" style="margin-top:24px"></div>
+      <div class="totals">
+        <div class="line total"><span>TOTAL</span><span>0 MIN</span></div>
+        <div class="dim">PAID: NOTHING</div>
+        <Stamp lines={['VOID']} size={80} fontSize={16} rotate={-12} right={10} bottom={-6} />
+      </div>
+      <div class="rule" style="margin-top:8px"></div>
+      <ReceiptNav current="none" />
+      <Thanks lines={['Try the archive', 'Or go back home']} />
+    </Receipt>
+  </main>
+</Base>

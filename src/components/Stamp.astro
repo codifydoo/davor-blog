@@ -1,0 +1,19 @@
+---
+/** Round rubber stamp in the accent colour. Lines are stacked. */
+interface Props {
+  lines: string[];
+  size?: number;
+  fontSize?: number;
+  rotate?: number;
+  right?: number;
+  bottom?: number;
+  top?: number;
+}
+const { lines, size = 80, fontSize = 13, rotate = -12, right = 10, bottom, top } = Astro.props;
+const pos = top !== undefined ? `top:${top}px` : `bottom:${bottom ?? -6}px`;
+---
+<div class="stamp" style={`right:${right}px;${pos};transform:rotate(${rotate}deg)`} aria-hidden="true">
+  <div style={`width:${size}px;height:${size}px;font-size:${fontSize}px`}>
+    {lines.map((l, i) => <Fragment>{i > 0 && <br />}{l}</Fragment>)}
+  </div>
+</div>

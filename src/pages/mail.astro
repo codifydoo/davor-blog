@@ -1,0 +1,54 @@
+---
+import Base from '../layouts/Base.astro';
+import Receipt from '../components/Receipt.astro';
+import Masthead from '../components/Masthead.astro';
+import Stamp from '../components/Stamp.astro';
+import ReceiptNav from '../components/ReceiptNav.astro';
+import Barcode from '../components/Barcode.astro';
+import Thanks from '../components/Thanks.astro';
+import { SITE } from '../site';
+import { fmtDate, fmtTime } from '../lib/posts';
+
+const printed = new Date();
+---
+<Base title="Mail" description="How to reach me. Plain text is fine, encrypted is better.">
+  <main class="screen">
+    <Receipt>
+      <Masthead />
+      <div class="meta">
+        <span>{fmtDate(printed)} {fmtTime(printed)}</span><span class="r">ITEM: MAIL</span>
+      </div>
+      <div class="rule" style="margin-top:12px"></div>
+
+      <h1 class="page-title">Mail order</h1>
+      <div class="page-kicker">QTY 1 · REPLY IN ~3 DAYS</div>
+      <div class="rule-dot" style="margin:16px 0 4px"></div>
+      <p class="prose" style="margin:0">Corrections, questions and better ways of doing things are all welcome. Plain text mail is fine. Encrypted is better.</p>
+
+      <div class="rule" style="margin-top:20px"></div>
+      <div class="kv">
+        <div><span class="k">TO</span><span class="plain">{SITE.email.endsWith('.example') ? 'TBA' : SITE.email}</span></div>
+        <div><span class="k">LANG</span><span>EN / HR</span></div>
+        {SITE.pgp.length > 0 && (
+          <div><span class="k">PGP</span><span class="wrap">{SITE.pgp.map((l, i) => <Fragment>{i > 0 && <br />}{l}</Fragment>)}</span></div>
+        )}
+        <div><span class="k">NOT</span><span>RECRUITERS · SEO OFFERS</span></div>
+      </div>
+      <div class="rule"></div>
+
+      <div style="position:relative;padding:20px 0 8px">
+        {SITE.email.endsWith('.example') ? (
+          <div class="button" style="color:#5c5751;border-style:dashed"><span>MAIL NOT YET OPEN</span><span>·</span></div>
+        ) : (
+          <a class="button" href={`mailto:${SITE.email}`}><span>SEND MAIL</span><span>→</span></a>
+        )}
+        <Stamp lines={['OPEN']} size={72} fontSize={14} rotate={12} right={-6} top={-40} />
+      </div>
+
+      <div class="rule" style="margin-top:16px"></div>
+      <ReceiptNav current="mail" />
+      <Barcode date={printed} serial={2} />
+      <Thanks lines={['Every mail gets read', 'Not every mail gets an answer']} />
+    </Receipt>
+  </main>
+</Base>
