@@ -30,7 +30,7 @@ const description =
     .replace(/\s+/g, ' ')
     .slice(0, 200);
 ---
-<Base title={post.data.title} description={description} type="article">
+<Base title={post.data.title} description={description} type="article" image={`/og/${post.id}.png`} imageAlt={post.data.title}>
   <main class="screen">
     <Receipt>
       <Masthead />

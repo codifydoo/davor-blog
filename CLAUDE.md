@@ -48,6 +48,11 @@ There is no test suite, linter or type-check script. `astro check` was removed b
 - Base owns all the meta tags. Its `noindex` prop drops the canonical and og:url tags, and the 404 page uses it.
 - RSS feeds come from one helper in `src/lib/feed.ts`, used for three outputs: `/feed.xml`, `/hr/feed.xml`, and one feed per tag at `/tags/<tag>/feed.xml`.
 
+**Link-preview images.**
+- `src/pages/og/[id].png.ts` renders one PNG per post at build time with satori and `@resvg/resvg-js` (`src/lib/og.ts`). The post page passes it to Base, which emits `og:image` and `twitter:card` tags. Other pages have no image.
+- Satori only falls back across font family names, so the `latin-ext` Plex files are registered as a second family, `PlexExt`. Without that, č, đ, š and ž render as boxes.
+- The card can only draw glyphs that exist in Plex's latin and latin-ext files, checked against their real glyph tables with `opentype.js`. A title or tag with anything else, such as an arrow, ‰, a Unicode hyphen, emoji or Cyrillic, fails the build with an error naming the post and the character. Titles and tags are NFC-normalized first. Titles over 140 characters, or longer than six lines, end in an ellipsis on the card.
+
 **Styling.**
 - All CSS is in `src/styles/global.css`, and it is inlined into each page (`build.inlineStylesheets: 'always'`). Colours are custom properties on `:root`.
 - The accent colour is injected from `SITE.accent` on `<body>`.

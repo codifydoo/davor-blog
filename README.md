@@ -35,6 +35,8 @@ set -euo pipefail
 ```
 ````
 
+Every post also gets a 1200x630 link-preview image at `/og/<post id>.png`, drawn at build time from its title, number, date and tags (`src/lib/og.ts`). Nothing to do per post.
+
 ## Site settings
 
 Name, tagline, email, PGP fingerprint, accent colour and the projects on the About page live in `src/site.ts`. The public URL is `site` in `astro.config.mjs`.
