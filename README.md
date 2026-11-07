@@ -37,7 +37,7 @@ set -euo pipefail
 
 ## Site settings
 
-Name, tagline, email, PGP fingerprint, accent colour and the devices on the About page live in `src/site.ts`. The public URL is `site` in `astro.config.mjs`.
+Name, tagline, email, PGP fingerprint, accent colour and the projects on the About page live in `src/site.ts`. The public URL is `site` in `astro.config.mjs`.
 
 ## Deploy
 
